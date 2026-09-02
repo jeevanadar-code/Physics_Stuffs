@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define time array (0 to 10 seconds)
+t = np.linspace(0, 10, 500)
+
+# 2. Define physics parameters
+A = 1.0          # Amplitude (meters)
+omega = np.pi    # Angular frequency 
+
+# 3. Calculate position and velocity using standard wave equations
+position = A * np.cos(omega * t)
+velocity = -A * omega * np.sin(omega * t)
+
+# 4. Plot the results
+plt.plot(t, position, label='Position (m)', color='blue')
+plt.plot(t, velocity, label='Velocity (m/s)', color='red', linestyle='--')
+
+plt.title('Simple Harmonic Motion')
+plt.xlabel('Time (s)')
+plt.ylabel('Magnitude')
+plt.legend()
+plt.grid(True)
+plt.show()
