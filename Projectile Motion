@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+v0 = 25.0          # Initial velocity in m/s
+angle_deg = 45.0   # Launch angle in degrees
+g = 9.81           # Acceleration due to gravity in m/s^2
+
+# Convert angle to radians for numpy trigonometric functions
+angle_rad = np.radians(angle_deg)
+
+# 2. Resolve Velocity into X and Y Components
+v0x = v0 * np.cos(angle_rad)
+v0y = v0 * np.sin(angle_rad)
+
+# 3. Calculate Time of Flight
+# The projectile hits the ground when vertical position (y) is 0. 
+# Solving y = v0y*t - 0.5*g*t^2 for t gives t = (2 * v0y) / g
+t_flight = (2 * v0y) / g
+
+# Create an array of time values from launch to landing
+t = np.linspace(0, t_flight, num=200)
+
+# 4. Calculate X and Y Positions over time
+# Horizontal motion has constant velocity (no acceleration)
+x = v0x * t
+
+# Vertical motion has constant downward acceleration (gravity)
+y = v0y * t - 0.5 * g * t**2
+
+# 5. Visualize the Trajectory
+plt.figure(figsize=(10, 5))
+plt.plot(x, y, color='purple', linewidth=2)
+
+# Formatting the graph
+plt.title(f'Projectile Motion (Launch Angle: {angle_deg}°, Velocity: {v0} m/s)')
+plt.xlabel('Horizontal Distance (m)')
+plt.ylabel('Vertical Height (m)')
+plt.axhline(0, color='black', linewidth=1) # Ground level
+plt.grid(True, alpha=0.5)
+
+# Set equal scaling so the parabolic arc isn't distorted
+plt.axis('equal')
+plt.show()
