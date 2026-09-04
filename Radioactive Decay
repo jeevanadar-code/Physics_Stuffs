@@ -1,0 +1,34 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+N0 = 1000          # Initial number of radioactive nuclei
+half_life = 5.0    # Time it takes for exactly half to decay (e.g., seconds)
+
+# 2. Calculate the Decay Constant (lambda)
+# The decay constant determines the probability of decay per unit time
+decay_constant = np.log(2) / half_life
+
+# 3. Create Time Array
+# Let's observe the system over 5 half-lives (5 * 5.0 = 25 seconds)
+t = np.linspace(0, 25, 200)
+
+# 4. Calculate the Number of Nuclei Remaining
+# The core physics equation: N = N0 * e^(-lambda * t)
+N_remaining = N0 * np.exp(-decay_constant * t)
+
+# 5. Visualize the Decay Curve
+plt.figure(figsize=(10, 5))
+plt.plot(t, N_remaining, color='red', linewidth=2.5)
+
+# Formatting the graph
+plt.title('Radioactive Decay Over Time')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Number of Nuclei Remaining')
+plt.grid(True, alpha=0.5)
+
+# Highlight the half-life points to show the math working
+for i in range(1, 5):
+    plt.plot(i * half_life, N0 / (2**i), 'ko') # Mark with black dots
+
+plt.show()
