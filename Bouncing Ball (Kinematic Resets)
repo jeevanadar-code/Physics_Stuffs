@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+y_0 = 10.0           # Initial drop height (meters)
+v_0 = 0.0            # Initial velocity (m/s)
+g = 9.81             # Gravity (m/s^2)
+restitution = 0.8    # Energy retained after a bounce (Coefficient of Restitution)
+
+# Simulation time constraints
+dt = 0.01            # Time step (calculate physics every 0.01 seconds)
+t_max = 8.0          # Total simulation time
+time = np.arange(0, t_max, dt)
+
+# Lists to store the tracked data for our graph
+y_positions = []
+
+# Current state variables
+y = y_0
+v = v_0
+
+# 2. Physics Simulation Loop (Euler Method)
+for t in time:
+    # Store the current height
+    y_positions.append(y)
+    
+    # Update velocity: Gravity constantly pulls downward
+    v = v - g * dt
+    
+    # Update position: Current velocity moves the ball
+    y = y + v * dt
+    
+    # 3. The Kinematic Reset (The Bounce)
+    if y <= 0:
+        y = 0                  # Prevent the ball from sinking into the floor
+        v = -v * restitution   # Reverse direction and lose energy
+
+# 4. Visualize the Trajectory
+plt.figure(figsize=(10, 5))
+plt.plot(time, y_positions, color='orange', linewidth=2)
+
+# Formatting the graph
+plt.title('Bouncing Ball Simulation')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Height (meters)')
+plt.axhline(0, color='black', linewidth=1.5) # The ground
+plt.grid(True, alpha=0.5)
+plt.show()
