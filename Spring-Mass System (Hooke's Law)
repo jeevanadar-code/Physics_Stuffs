@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+m = 2.0          # Mass of the block (kg)
+k = 50.0         # Spring constant (N/m) - how stiff the spring is
+x_0 = 1.5        # Initial stretch from the center (meters)
+v_0 = 0.0        # Initial velocity (m/s)
+
+# Simulation time constraints
+dt = 0.01        # Time step (calculate physics every 0.01 seconds)
+t_max = 5.0      # Total simulation time
+time = np.arange(0, t_max, dt)
+
+# List to store the tracked data
+x_positions = []
+
+# Current state variables
+x = x_0
+v = v_0
+
+# 2. Physics Simulation Loop (Semi-Implicit Euler Method)
+for t in time:
+    x_positions.append(x)
+    
+    # Hooke's Law: Force is proportional to distance, but in the opposite direction
+    F = -k * x
+    
+    # Newton's Second Law: acceleration = Force / mass
+    a = F / m
+    
+    # Update velocity: Acceleration changes velocity over our time step
+    v = v + a * dt
+    
+    # Update position: Velocity moves the mass over our time step
+    x = x + v * dt
+
+# 3. Visualize the Oscillation
+plt.figure(figsize=(10, 5))
+plt.plot(time, x_positions, color='green', linewidth=2)
+
+# Formatting the graph
+plt.title("Spring-Mass System (Dynamically Simulated)")
+plt.xlabel("Time (seconds)")
+plt.ylabel("Position (meters)")
+plt.axhline(0, color='black', linewidth=1.5, linestyle='--') # Equilibrium center
+plt.grid(True, alpha=0.5)
+plt.show()
