@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Create the Time Array
+t = np.linspace(0, 10, 500)
+
+# 2. Define Wave 1 (e.g., a standard low tone)
+A1 = 1.0          # Amplitude
+omega1 = 2.0      # Frequency
+wave1 = A1 * np.sin(omega1 * t)
+
+# 3. Define Wave 2 (e.g., a slightly higher tone)
+A2 = 1.0          # Amplitude
+omega2 = 2.4      # Slightly different frequency
+wave2 = A2 * np.sin(omega2 * t)
+
+# 4. The Physics: Superposition! 
+# We literally just add the two arrays together.
+combined_wave = wave1 + wave2
+
+# 5. Visualize the Interference
+plt.figure(figsize=(10, 6))
+
+# Plot the original waves as thin, dotted lines
+plt.plot(t, wave1, color='blue', linestyle=':', label='Wave 1')
+plt.plot(t, wave2, color='red', linestyle=':', label='Wave 2')
+
+# Plot the combined wave as a thick, solid line
+plt.plot(t, combined_wave, color='purple', linewidth=2.5, label='Combined Wave (Interference)')
+
+# Formatting the graph
+plt.title('Wave Interference: The Phenomenon of "Beats"')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Amplitude')
+plt.axhline(0, color='black', linewidth=1)
+plt.legend(loc='upper right')
+plt.grid(True, alpha=0.5)
+plt.show()
