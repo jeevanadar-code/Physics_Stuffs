@@ -1,0 +1,54 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+GM = 1.0         # Gravitational parameter (Gravity constant * Mass of the Star)
+dt = 0.001       # Time step (milliseconds)
+t_max = 10.0     # Total simulation time
+time = np.arange(0, t_max, dt)
+
+# Initial position and velocity of the planet
+x = 1.0          # Starting 1 unit to the right of the star
+y = 0.0          # Starting on the x-axis
+vx = 0.0         # No horizontal velocity initially
+vy = 0.8         # Vertical velocity (1.0 makes a perfect circle; 0.8 makes an ellipse!)
+
+# Lists to store the trajectory
+x_positions = []
+y_positions = []
+
+# 2. Physics Simulation Loop (Semi-Implicit Euler Method)
+for t in time:
+    x_positions.append(x)
+    y_positions.append(y)
+    
+    # Calculate distance from the star (which is fixed at 0,0)
+    r = np.sqrt(x**2 + y**2)
+    
+    # Newton's Law of Gravity: acceleration depends on distance squared.
+    # We split the pull into X and Y components. Dividing by r^3 handles 
+    # both the inverse square law (1/r^2) and the directional angle simultaneously.
+    ax = -GM * x / r**3
+    ay = -GM * y / r**3
+    
+    # Update velocity: Gravity constantly curves the planet's path
+    vx = vx + ax * dt
+    vy = vy + ay * dt
+    
+    # Update position: Velocity moves the planet forward
+    x = x + vx * dt
+    y = y + vy * dt
+
+# 3. Visualize the Orbit
+plt.figure(figsize=(8, 8))
+plt.plot(x_positions, y_positions, color='blue', label='Planet Trajectory')
+plt.plot(0, 0, 'yo', markersize=15, label='Star (Sun)') # Plot the star at (0,0)
+
+# Formatting the graph
+plt.title('Planetary Orbit: Kepler\'s Elliptical Path')
+plt.xlabel('X Position')
+plt.ylabel('Y Position')
+plt.axis('equal') # CRITICAL: Forces a 1:1 aspect ratio so circles don't look squished
+plt.grid(True, alpha=0.5)
+plt.legend()
+plt.show()
