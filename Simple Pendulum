@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Initial Parameters
+L = 2.0               # Length of the pendulum string in meters
+g = 9.81              # Gravity (m/s^2)
+theta_0_deg = 10.0    # Initial release angle in degrees (must be small!)
+
+# Convert release angle to radians for calculation
+theta_0 = np.radians(theta_0_deg)
+
+# 2. Calculate Angular Frequency
+# Because of our small angle trick, omega depends ONLY on gravity and length.
+# Notice how mass is completely missing from this equation!
+omega = np.sqrt(g / L)
+
+# 3. Create Time Array
+t = np.linspace(0, 5, 200)
+
+# 4. Calculate the Angle over Time
+# The complex pendulum math reduces to our standard Simple Harmonic Motion equation
+theta_t = theta_0 * np.cos(omega * t)
+
+# Convert back to degrees so the graph is easy for a human to read
+theta_t_deg = np.degrees(theta_t)
+
+# 5. Visualize the Pendulum Swing
+plt.figure(figsize=(10, 5))
+plt.plot(t, theta_t_deg, color='magenta', linewidth=2.5)
+
+# Formatting the graph
+plt.title(f'Simple Pendulum (Small Angle Approximation: {theta_0_deg}°)')
+plt.xlabel('Time (seconds)')
+plt.ylabel('Angle (degrees)')
+plt.axhline(0, color='black', linewidth=1) # The center resting point
+plt.grid(True, alpha=0.5)
+plt.show()
