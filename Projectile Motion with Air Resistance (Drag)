@@ -1,0 +1,86 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. Define Physical Parameters (A Standard Baseball)
+m = 0.145          # Mass of the ball (kg)
+r = 0.037          # Radius of the ball (m)
+A = np.pi * r**2   # Cross-sectional area facing the wind (m^2)
+rho = 1.225        # Air density at sea level (kg/m^3)
+Cd = 0.47          # Drag coefficient (how aerodynamically "blunt" a sphere is)
+g = 9.81           # Gravity (m/s^2)
+
+# Initial Launch Conditions (approx. 90 mph at 45 degrees)
+v0 = 40.0          
+angle_rad = np.radians(45.0)
+
+# Calculate the constant part of the drag equation: 0.5 * rho * Cd * A
+drag_const = 0.5 * rho * Cd * A
+
+# 2. Setup the Simulation Loop
+dt = 0.01          # Time step (milliseconds)
+t_max = 10.0
+time = np.arange(0, t_max, dt)
+
+# State variables for the Real World (With Air)
+x, y = 0.0, 0.0
+vx, vy = v0 * np.cos(angle_rad), v0 * np.sin(angle_rad)
+x_real, y_real = [], []
+
+# State variables for the Vacuum (No Air)
+x_vac, y_vac = 0.0, 0.0
+vx_vac, vy_vac = v0 * np.cos(angle_rad), v0 * np.sin(angle_rad)
+x_vac_list, y_vac_list = [], []
+
+# 3. Physics Simulation Loop
+for t in time:
+    # Record positions until hitting the ground
+    if y >= 0:
+        x_real.append(x)
+        y_real.append(y)
+    if y_vac >= 0:
+        x_vac_list.append(x_vac)
+        y_vac_list.append(y_vac)
+        
+    # Stop the loop when both balls have landed
+    if y < 0 and y_vac < 0:
+        break
+
+    # --- Beginner Physics: Vacuum ---
+    vy_vac = vy_vac - g * dt              # Only gravity acts on it
+    x_vac = x_vac + vx_vac * dt           # X velocity never changes
+    y_vac = y_vac + vy_vac * dt
+
+    # --- Intermediate Physics: Air Resistance ---
+    # Calculate the total current speed (Pythagorean theorem)
+    v = np.sqrt(vx**2 + vy**2)
+    
+    # Calculate the total Drag Force: F = 0.5 * rho * v^2 * Cd * A
+    F_drag = drag_const * v**2
+    
+    # Drag ALWAYS points exactly opposite to the direction of travel.
+    # We split the drag force into X and Y components using the velocity ratios.
+    ax = -(F_drag * (vx / v)) / m
+    ay = -g - (F_drag * (vy / v)) / m
+    
+    # Update velocity and position
+    vx = vx + ax * dt
+    vy = vy + ay * dt
+    x = x + vx * dt
+    y = y + vy * dt
+
+# 4. Visualize the Trajectories
+plt.figure(figsize=(10, 5))
+
+# Plot both trajectories
+plt.plot(x_vac_list, y_vac_list, color='gray', linestyle='--', label='Vacuum (Beginner Math)')
+plt.plot(x_real, y_real, color='red', linewidth=2.5, label='Real World (Air Resistance)')
+
+# Formatting the graph
+plt.title('Projectile Motion: Vacuum vs. Air Resistance')
+plt.xlabel('Horizontal Distance (meters)')
+plt.ylabel('Vertical Height (meters)')
+plt.axhline(0, color='black', linewidth=1)
+plt.legend()
+plt.grid(True, alpha=0.5)
+plt.axis('equal') 
+plt.show()
